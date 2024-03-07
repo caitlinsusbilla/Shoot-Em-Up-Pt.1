@@ -1,0 +1,36 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Player : MonoBehaviour
+{
+    public Projectile laserPrefab;
+    public float speed = 5.0f;
+    public bool _laserActive;
+
+    // moving the player
+    private void Update(){
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)){
+            this.transform.position += Vector3.left * this.speed * Time.deltaTime;
+        }else if(Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)){
+            this.transform.position += Vector3.right * this.speed * Time.deltaTime;
+        }
+
+        if(Input.GetKeyDown(KeyCode.Space)){
+            Shoot();
+        }
+    }
+
+    // shoot when no projectile exists
+    private void Shoot(){
+        if(!_laserActive){
+            Projectile projectile = Instantiate(this.laserPrefab, this.transform.position, Quaternion.identity);
+            projectile.destroyed += LaserDestroyed;
+            _laserActive = true;
+        }
+    }
+
+    private void LaserDestroyed(){
+        _laserActive = false;
+    }
+}
