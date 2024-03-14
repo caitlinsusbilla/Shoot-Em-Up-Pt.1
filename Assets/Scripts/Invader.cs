@@ -1,21 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Invader : MonoBehaviour
 {
+    
     public Sprite[] animationSprites;
     public float animationTime;
     private SpriteRenderer _spriteRenderer;
     private int _animationFrame;
     public int pointValue;
     public GameController gameController;
+    public Invaders invade;
 
     public System.Action killed;
 
     private void Awake(){
         _spriteRenderer= GetComponent<SpriteRenderer>();
         gameController = FindObjectOfType<GameController>();
+        invade = FindObjectOfType<Invaders>();
     }
 
     private void Start(){
@@ -40,5 +44,10 @@ public class Invader : MonoBehaviour
             gameController.UpdateScore(pointValue);
             this.gameObject.SetActive(false);
         }
+        if (other.CompareTag("End")){
+            SceneManager.LoadScene("CreditScene");
+        }
     }
+
+    
 }

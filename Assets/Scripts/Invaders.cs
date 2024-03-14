@@ -13,6 +13,8 @@ public class Invaders : MonoBehaviour
     public float missileAttackRate = 1.0f;
     private Invader type;
     private GameController gameController;
+    public AudioClip shootingSound;
+    private AudioSource audioSource;
 
     // for calculating speed
     public int amountKilled {get; private set; }
@@ -28,6 +30,8 @@ public class Invaders : MonoBehaviour
         type = FindObjectOfType<Invader>();
         gameController = FindObjectOfType<GameController>();
         InvokeRepeating(nameof(MissileAttack), this.missileAttackRate, this.missileAttackRate);
+        audioSource = GetComponent<AudioSource>();
+        audioSource.clip = shootingSound;
     }
 
     // for moving invaders forward
@@ -63,16 +67,19 @@ public class Invaders : MonoBehaviour
 
     // random value for invader missiles
     private void MissileAttack(){
+    
         foreach(Transform invader in this.transform){
-            if(!invader.gameObject.activeInHierarchy){
-                continue;
-            }
-
-            if(Random.value < (1.0f / (float)this.amountAlive)){
-                Instantiate(this.missilePrefab, invader.position, Quaternion.identity);
-                break;
-            }
+        if(!invader.gameObject.activeInHierarchy){
+            continue;
         }
+
+        if(Random.value < (1.0f / (float)this.amountAlive)){
+            audioSource.Play();
+            Instantiate(this.missilePrefab, invader.position, Quaternion.identity);
+            break;
+        }
+        }
+    
     }
     
     public void InvaderKilled(){
@@ -106,4 +113,5 @@ public class Invaders : MonoBehaviour
             }
         }
     }
+
 }
